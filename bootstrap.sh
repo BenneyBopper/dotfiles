@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 cd "$(dirname "${BASH_SOURCE}")"
 
-# Actually this might be deceptive, because the old script keeps running.
-# I'll comment it out for now so I don't confuse myself.
-# echo Updating dotfiles directory...
-# git pull origin master
+echo Updating dotfiles directory...
+#git pull origin master
 
 function git-update() {
 	# Either clones a directory if it doesn't exist at the given location
@@ -21,27 +19,26 @@ function git-update() {
 	fi
 	popd > /dev/null
 }
+
 function doIt() {
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
-		--exclude "README.md" --exclude "notes.md" -av --no-perms . ~
+		--exclude "README.md" --exclude "os-specific/" -av --no-perms . ~
 
 	git config --global core.excludesfile ~/.gitignore_global
 
 	git-update https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 	git-update https://github.com/gmarik/Vundle.vim.git                 ~/.vim/bundle/Vundle.vim
-	git-update https://github.com/sickill/stderred.git                  ~/.stderred
-	# Setup stderred
-	cd ~/.stderred
-	if [[ "$OSTYPE" == "linux-gnu" ]]; then
-		make;
-	elif [[ "$OSTYPE" == "darwin"* ]]; then
-		make universal;
-	else
-		echo Cannot install stderred: Unknown OS.;
-	fi
 
-	# source ~/.bash_profile
+	# OS specific stuff.
+	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		cat ./os-specific/linux.zshrc >> ~/.zshrc
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+		cat ./os-specific/mac.zshrc >> ~/.zshrc
+	else
+		cat ./os-specific/generic.zshrc >> ~/.zshrc
+	fi
 }
+
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
 	doIt
 else

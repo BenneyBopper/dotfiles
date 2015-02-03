@@ -1,8 +1,13 @@
-"<vundle>
+"==========================================
+" Vundle
+"==========================================
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
 set rtp+=~/.vim/bundle/Vundle.vim
+
+" To activate plugins in Vim
+" :PluginInstall
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
@@ -10,14 +15,11 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 " Sublime-like fuzzy search
 Plugin 'kien/ctrlp.vim'
-" Directory listing enhancer
-" tpope/vim-vinegar
 " Static code analysis
 Plugin 'scrooloose/syntastic'
 " Sets tab settings based on current file
 Plugin 'myint/indent-finder'
-" Powerline!
-" Plugin 'Lokaltog/vim-powerline'
+" Ultimate power is on the line
 Plugin 'bling/vim-airline'
 " Allow commenting blocks of code
 Plugin 'tpope/vim-commentary'
@@ -28,22 +30,14 @@ Plugin 'tpope/vim-fugitive'
 " Disable basic navigation commands to become familiar with more advanced ones
 Plugin 'wikitopian/hardmode'
 
-" Code completion! Note that this has a compiled component.
-Plugin 'Valloric/YouCompleteMe'
-" Snippets - Engine
-Plugin 'SirVer/ultisnips'
 " Snippets - Actual snippits
 Plugin 'honza/vim-snippets'
 
 " Color scheme stuff
-" A big pack of color schemes
 Plugin 'flazz/vim-colorschemes'
-" Automatically convert gvim true color themes into 256 color terminal approximations
-Plugin 'godlygeek/csapprox'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-"</vundle>
 
 "==========================================
 " REMAPPINGS
@@ -55,9 +49,10 @@ filetype plugin indent on    " required
 " Remap leader to something easier to press
 let mapleader = ","
 
-" Use jk/kj to exit insertion mode (Writing this line was fun!) 
+" Use jk/kj to exit insertion mode (Writing this line was fun!)
 inoremap jk <ESC>
 inoremap kj <ESC>
+inoremap <C-c> <Esc>
 
 " Move up/down sensibly on wrapped lines
 noremap j gj
@@ -74,19 +69,29 @@ noremap <C-\> gt
 noremap <C-]> gT
 noremap <C-t> :tabnew<CR>
 
+" Save current buffer
+nmap gs :w<CR>
+
+" Quit current buffer
+nmap gq :q<CR>
+
+" Switching paste modes
+nmap gp :set paste<CR>
+nmap gP :set nopaste<CR>
+
 " PLUGIN REMAPS
 
 " Toggle hardmode
 nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
 " Open file browser
 nmap ge :NERDTreeToggle<CR>
-
 "==========================================
 " SYNTASTIC CONFIG
 "==========================================
 
 let g:syntastic_python_checkers=['pylint']
 let g:syntastic_javascript_checkers=['jshint']
+let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
 
 " SNIPPITS AND AUTOCOMPLETE CONFIG
 "==========================================
@@ -102,15 +107,19 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " There is a nice visualiser at http://bytefluent.com/vivify/
 
 set t_Co=256                 " Make sure terminal is in 256 color mode
-" colorscheme paintbox
 colorscheme molokai
-" colorscheme darkZ
 
 syntax on                    " Enable syntax highlighting
 
+" Color Line numbers
+hi LineNr ctermfg=grey guifg=grey ctermbg=232 guibg=232
+
+" Color Matching Parens
+hi MatchParen cterm=underline ctermfg=none ctermbg=none
+
 " Color listchar stuff
-"hi NonText ctermfg=7 guifg=gray
-"hi SpecialKey ctermfg=7 guifg=gray
+hi NonText ctermfg=236 guifg=236
+hi SpecialKey ctermfg=236 guifg=236
 
 let g:airline_theme='tomorrow'
 
@@ -137,7 +146,7 @@ set incsearch
 " Highlight all search results
 set hlsearch
 " Remove highlighting if we're done with it
-nmap <C-n> :nohlsearch<CR>
+noremap gn :noh<CR>
 " Do a case sensitive search only if we search for something which features
 " uppercase letter
 set ignorecase  " Need this for smartcase to work
@@ -192,7 +201,4 @@ set pastetoggle=<F10>
 " Open new splits below and to the right
 set splitbelow
 set splitright
-
-" Clipboard integration
-vmap <C-c> y:call system("~/bin/sendclipboard", getreg("\""))<CR>
 
